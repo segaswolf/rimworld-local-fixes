@@ -29,3 +29,9 @@
 - Patch_RankComp_GameComponentTick: skips tick processing if not dirty
 - Patch_RankComp_LoadedGame: skips processing if no rankedSettings on game load
 - Added try-catch in Bootstrap for safer loading
+
+## NeuralSuperchargerOwnershipFix
+- 2026-02-15: New patch to fix duplicate load ID errors.
+- Patch_CompNeuralSuperchargerOwnership_PostExposeData: deduplicate buildings on load
+- Patch_CompAssignableToPawn_NeuralSupercharger_PostExposeData: deduplicate pawns on load
+- Fixes 'register the same load ID twice: null, pathRelToParent=/ownedNeuralSupercharger' errors
