@@ -8,6 +8,9 @@
 - FloatMenu `GetOptions` safety adjusted to avoid wiping options list on exceptions.
 - Ghost graphic fallback guard in `GhostUtility.GhostGraphicFor`.
 - Deadlife gas spewer sustainer stability guards.
+- SuppressCurl60Spam: suppresses SSL certificate errors from mod update checker (prevents log spam).
+- MinifiedThing label safety guard.
+- 2026-02-15: Removed XmlDocumentViewer disable patches (broke functionality), added try-catch in Bootstrap.
 
 ## PawnEditorStabilityPatch
 - 2026-02-15: Simplified patch - removed broken Finalizer patches that caused load errors. Only kept PreOpen and TexPawnEditor static init guards.
