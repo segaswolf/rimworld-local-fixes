@@ -9,5 +9,22 @@
   <loadAfter>
     <li>Memegoddess.StockpileRanking</li>
   </loadAfter>
-  <description>Local runtime safety patch for Stockpile Ranking. Uses Prefix-based guards to prevent exceptions from RankComp before they occur, instead of suppressing them.</description>
+  <description>## Stockpile Ranking Safe Patch
+
+### Problem:
+- **Sequence contains no elements**: Repeated exception in RankComp.DetermineUsedFilters() causing game lag
+- The error occurs because the code calls .Last() on an empty ranks list without checking
+
+### Solution:
+- Prefix-based guards that check if ranks/settings are null or empty BEFORE calling methods that would crash
+- Prevents the error from occurring instead of suppressing it after the fact
+
+### Load Order:
+Place AFTER the Stockpile Ranking mod (Memegoddess.StockpileRanking) in your mod list.
+
+### Patches:
+- Patch_RankComp_DetermineUsedFilter: Checks ranks.Count > 0 before calling .Last()
+- Patch_RankComp_DetermineUsedFilters: Skips if rankedSettings is null/empty
+- Patch_RankComp_GameComponentTick: Skips tick if not dirty
+- Patch_RankComp_LoadedGame: Skips if no rankedSettings on game load</description>
 </ModMetaData>

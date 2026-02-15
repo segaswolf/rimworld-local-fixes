@@ -9,5 +9,20 @@
   <loadAfter>
     <li>NeuralSuperchargerOwnership</li>
   </loadAfter>
-  <description>Fixes duplicate load ID errors when loading saves with neural superchargers.</description>
+  <description>## Neural Supercharger Ownership Fix
+
+### Problem:
+- **Register the same load ID twice**: Duplicate load IDs when loading saves with neural superchargers
+- The mod saves pawn assignments but sometimes registers the same ID twice, causing save/load errors
+
+### Solution:
+- Prefix patches on PostExposeData methods that deduplicate the lists of assigned pawns/buildings
+- Removes duplicate entries before they're saved/loaded
+
+### Load Order:
+Place AFTER the Neural Supercharger Ownership mod in your mod list.
+
+### Patches:
+- Patch_CompNeuralSuperchargerOwnership_PostExposeData: Deduplicates owned neural superchargers
+- Patch_CompAssignableToPawn_NeuralSupercharger_PostExposeData: Deduplicates assigned pawns</description>
 </ModMetaData>
