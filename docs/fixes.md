@@ -21,3 +21,11 @@
 - Kid apparel texture fallback.
 - Cross-ref cleanup for dangling style/pawnkind refs.
 - Archotech punch sound fallback.
+
+## StockpileRankingSafePatch
+- 2026-02-15: Converted from Finalizer-based to Prefix-based guards.
+- Patch_RankComp_DetermineUsedFilter: prevents null/empty ranks error before calling .Last()
+- Patch_RankComp_DetermineUsedFilters: skips processing if rankedSettings is null/empty
+- Patch_RankComp_GameComponentTick: skips tick processing if not dirty
+- Patch_RankComp_LoadedGame: skips processing if no rankedSettings on game load
+- Added try-catch in Bootstrap for safer loading
