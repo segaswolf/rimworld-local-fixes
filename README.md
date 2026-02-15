@@ -2,16 +2,22 @@
 
 > Stability-first local fixes for RimWorld 1.6 modpacks, with a strong focus on Progression-centered setups.
 
-## Why this exists 🔍
-Large modlists can break in subtle ways: tab UIs fail to open, context menus lose options, and repeated runtime errors create lag.
-
-This project keeps a **problem -> fix -> validation** loop so each change is traceable and regressions are easier to catch.
-
 ## What you will find here 🧩
-- Runtime safety patch source (`RuntimeStabilityFix`)
-- Pawn Editor crash-guard source (`PawnEditorStabilityPatch`)
-- XML fallback and cross-reference cleanup pack (`CrossRefStabilityFix`)
-- Logs and triage docs to avoid repeating already-tested work
+
+### Local Patches (in `mods/`)
+
+| Mod | Description | Target Problem |
+|-----|-------------|----------------|
+| `RuntimeStabilityFix` | Runtime safety patches for various mod incompatibilities | Suppresses known crashes, handles null references |
+| `PawnEditorStabilityPatch` | Fixes for Pawn Editor UI crashes and duplicate pawn IDs | "Failed to initialize tab worker", duplicate pawn IDs |
+| `StockpileRankingSafePatch` | Prefix-based guards to prevent errors | "Sequence contains no elements" loop |
+| `NeuralSuperchargerOwnershipFix` | Deduplicates pawns/buildings on game load | "register the same load ID twice" |
+| `CrossRefStabilityFix` | XML fallback defs and cross-reference cleanup | Missing defs, cross-ref errors |
+
+### Tracking Docs
+- `docs/problems.md` -> open + historical problem signatures
+- `docs/fixes.md` -> implemented fixes by module
+- `docs/patch-notes.md` -> dated changes
 
 ## Target environment 🎯
 - RimWorld `1.6`
