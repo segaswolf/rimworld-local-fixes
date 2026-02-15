@@ -40,7 +40,10 @@ This project keeps a **problem -> fix -> validation** loop so each change is tra
 5. Push + update notes
 
 ## Community 💬
-- Progression ecosystem Discord: https://discord.gg/b58NcrzxRS
+These patches are made for the Progression mod ecosystem created by Ferny.
+
+- Discord: https://discord.gg/b58NcrzxRS
+- Modpack: https://steamcommunity.com/sharedfiles/filedetails/?id=3521297585
 
 ## Attribution ✍️
 - Local patch metadata uses author: `Segas Wolf`
