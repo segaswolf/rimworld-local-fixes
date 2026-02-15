@@ -14,3 +14,4 @@
 - Refined repository presentation to clearly state project scope and target mod ecosystem.
 - Added `docs/session-notes.md` to preserve operational context between pushes.
 - Clarified documentation map for problem -> fix -> validation continuity.
+- Simplified PawnEditorStabilityPatch: removed broken Finalizer patches that caused mod load failures (`System.NotSupportedException` on generic constructors). Kept only PreOpen and TexPawnEditor static init guards.

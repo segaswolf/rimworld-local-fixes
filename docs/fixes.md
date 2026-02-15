@@ -10,11 +10,7 @@
 - Deadlife gas spewer sustainer stability guards.
 
 ## PawnEditorStabilityPatch
-- Guards for `ListingMenu_Items` static/init and constructors.
-- Guard for `TexPawnEditor` static init with placeholder icons.
-- Guard for `TabDef.Initialize`.
-- Null icon placeholder injection for heading constructors.
-- Additional `TabWorker_AnimalMech.Initialize` guard with broader method discovery.
+- 2026-02-15: Simplified patch - removed broken Finalizer patches that caused load errors. Only kept PreOpen and TexPawnEditor static init guards.
 
 ## CrossRefStabilityFix
 - Restored missing research/category/thing fallback defs.
