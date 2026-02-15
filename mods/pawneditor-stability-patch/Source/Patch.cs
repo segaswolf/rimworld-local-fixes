@@ -6,7 +6,6 @@ using HarmonyLib;
 using Verse;
 using UnityEngine;
 using RimWorld;
-using RimWorld;
 
 namespace PawnEditorStabilityPatch {
 public class Bootstrap : Mod {
@@ -94,54 +93,6 @@ public static class Patch_TabWorker_FactionOverview_GetHeadings {
             if (val == null) {
               f.SetValue(null, Texture2D.whiteTexture);
             }
-          }
-        }
-      }
-    } catch {
-    }
-    return true;
-  }
-}
-
-[HarmonyPatch]
-public static class Patch_TabWorker_Bio_Humanlike_SetDevStage {
-  static IEnumerable<MethodBase> TargetMethods() {
-    var t = AccessTools.TypeByName("PawnEditor.TabWorker_Bio_Humanlike");
-    if (t == null) yield break;
-    var m = AccessTools.Method(t, "SetDevStage");
-    if (m != null) yield return m;
-  }
-
-  static bool Prefix(Pawn pawn, DevelopmentalStage stage) {
-    try {
-      if (stage == DevelopmentalStage.Adult) {
-        var currentBioAge = pawn.ageTracker.AgeBiologicalYears;
-        if (currentBioAge > 18) {
-          return false;
-        }
-      }
-    } catch {
-    }
-    return true;
-  }
-}
-
-[HarmonyPatch]
-public static class Patch_Hediff_Add {
-  static IEnumerable<MethodBase> TargetMethods() {
-    var t = AccessTools.TypeByName("Verse.HediffSet");
-    if (t == null) yield break;
-    var m = AccessTools.Method(t, "Add");
-    if (m != null) yield return m;
-  }
-
-  static bool Prefix(object __instance, Hediff hediff) {
-    try {
-      if (__instance is HediffSet hediffSet) {
-        if (hediff != null && hediff.def.defName == "MissingBodyPart") {
-          if (hediff.Part == null) {
-            Log.Warning("[PawnEditorStabilityPatch] Attempted to add MissingBodyPart without specific body part - blocking to prevent pawn death.");
-            return false;
           }
         }
       }
