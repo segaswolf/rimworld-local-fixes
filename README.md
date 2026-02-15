@@ -1,49 +1,49 @@
 # Segas Wolf RimWorld Local Fixes
 
-A local compatibility and stability patch line for RimWorld 1.6, focused on heavily modded saves.
+> Stability-first local fixes for RimWorld 1.6 modpacks, with a strong focus on Progression-centered setups.
 
-## Project Vision
-This repository tracks practical fixes for runtime errors, cross-reference breakage, and UI regressions that appear in large modlists.
+## Why this exists 🔍
+Large modlists can break in subtle ways: tab UIs fail to open, context menus lose options, and repeated runtime errors create lag.
 
-Primary target context:
-- RimWorld 1.6
-- Progression-centered setups (Ferny ecosystem and related content)
-- Long-running colonies where stability is more important than perfect upstream purity
+This project keeps a **problem -> fix -> validation** loop so each change is traceable and regressions are easier to catch.
 
-## What This Repository Contains
-- Runtime guard patch source (`RuntimeStabilityFix`)
-- Pawn Editor crash guard patch source (`PawnEditorStabilityPatch`)
+## What you will find here 🧩
+- Runtime safety patch source (`RuntimeStabilityFix`)
+- Pawn Editor crash-guard source (`PawnEditorStabilityPatch`)
 - XML fallback and cross-reference cleanup pack (`CrossRefStabilityFix`)
-- Problem/fix/validation logs to avoid repeating already-tested steps
+- Logs and triage docs to avoid repeating already-tested work
 
-## Goals
-- Keep long-running saves stable with targeted runtime guards.
-- Reduce cross-reference and startup noise with safe fallback defs and patches.
-- Preserve in-game UX (menus, tabs, tools) when third-party providers throw errors.
-- Track problem -> fix -> validation so regressions are easy to spot.
+## Target environment 🎯
+- RimWorld `1.6`
+- Progression ecosystem (Ferny and related content)
+- Long-running colonies where stability is prioritized
 
-## Branch Model
-- `main`: docs, issue tracking, process, and triage workflow.
-- `patch/runtime-stability-fix`: runtime guard patch source and metadata.
-- `patch/pawneditor-stability`: Pawn Editor-specific stability patch source and metadata.
-- `patch/crossref-stability`: XML fallback and cross-reference cleanup pack.
+## Repository map 🗂️
+- `main` -> docs, process, tracking, triage workflow
+- `patch/runtime-stability-fix` -> runtime guard module
+- `patch/pawneditor-stability` -> Pawn Editor stabilization module
+- `patch/crossref-stability` -> XML fallback/cleanup module
 
-## Tracking Files
-- `docs/problems.md`: active and historical problem signatures.
-- `docs/fixes.md`: implemented fixes by patch module.
-- `docs/patch-notes.md`: dated change log.
-- `docs/validation.md`: current validation queue and outcomes.
-- `docs/session-notes.md`: imported operational notes and key decisions.
-- `docs/triage.md`: repeatable Player.log triage flow.
+## Tracking docs 📘
+- `docs/problems.md` -> open + historical problem signatures
+- `docs/fixes.md` -> implemented fixes by module
+- `docs/patch-notes.md` -> dated changes
+- `docs/validation.md` -> validation queue/results
+- `docs/session-notes.md` -> operational context
+- `docs/triage.md` -> repeatable Player.log triage flow
 
-## Triage Workflow
-- Track root problems from logs through issues using `.github/ISSUE_TEMPLATE/playerlog-problem.md`.
-- Validate each fix with `.github/ISSUE_TEMPLATE/fix-validation.md` and `docs/validation.md`.
-- Keep pushes aligned with `docs/triage.md` to prevent regression loops and duplicate work.
+## Workflow (short) ⚙️
+1. Capture root issue from `Player.log`
+2. Open issue with log signature + impact
+3. Patch on dedicated branch
+4. Validate behavior and logs
+5. Push + update notes
 
-
-## Community
+## Community 💬
 - Progression ecosystem Discord: https://discord.gg/b58NcrzxRS
 
-## Attribution Note
-- Local patch About metadata in this repository uses author `Segas Wolf`.
+## Attribution ✍️
+- Local patch metadata uses author: `Segas Wolf`
+
+---
+If you are reviewing this repository for the first time, start with `docs/problems.md` and `docs/validation.md`.
