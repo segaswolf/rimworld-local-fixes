@@ -15,11 +15,14 @@
 - **Failed to initialize tab worker**: NullReferenceException when opening Pawn Editor tabs
 - **Duplicate Pawn IDs**: Occasional duplicate pawn IDs when copying/pasting pawns in the editor
 - **Texture initialization errors**: Null textures causing UI crashes
+- **Age always resets to 18**: Blocks SetDevStage from reducing age below current
+- **Missing body part kills pawn**: Blocks adding MissingBodyPart hediff without specific body part
 
 ### Solution:
 - Prefix-based guards that pre-initialize Texture2D fields before they're accessed
 - Postfix on LoadItem that detects and fixes duplicate pawn IDs by assigning unique IDs
-- Try-catch in Bootstrap to prevent mod load failures
+- Prefix on SetDevStage to prevent age from being reduced
+- Prefix on HediffSet.Add to block MissingBodyPart without specific part
 
 ### Load Order:
 Place AFTER the Pawn Editor mod (isorex.pawneditor) in your mod list.
@@ -28,5 +31,7 @@ Place AFTER the Pawn Editor mod (isorex.pawneditor) in your mod list.
 - Patch_TabDefInitialize: Guards TabDef.Initialize() for null textures
 - Patch_TabWorker_AnimalMech_Initialize: Guards TabWorker_AnimalMech.Initialize() for null textures
 - Patch_TabWorker_FactionOverview_GetHeadings: Guards heading initialization
-- Patch_SaveLoadUtility_LoadItem: Fixes duplicate pawn IDs after loading</description>
+- Patch_SaveLoadUtility_LoadItem: Fixes duplicate pawn IDs after loading
+- Patch_TabWorker_Bio_Humanlike_SetDevStage: Prevents age from being reduced to 18
+- Patch_Hediff_Add: Blocks MissingBodyPart hediff without specific body part</description>
 </ModMetaData>
