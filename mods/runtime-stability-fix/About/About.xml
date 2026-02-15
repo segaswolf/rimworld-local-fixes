@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Runtime Stability Fix (Local)</name>
+  <author>Segas Wolf</author>
+  <packageId>localfix.runtime.stability</packageId>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Runtime safety patches for various mod incompatibilities. Suppresses known crashes, handles null references, prevents log spam.</description>
+</ModMetaData>
