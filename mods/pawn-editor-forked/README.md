@@ -1,4 +1,4 @@
-# Pawn Editor (Community Fork)
+# Pawn Editor Forked (Community Fork)
 
 Maintained fork of Pawn Editor for RimWorld 1.6.
 
@@ -7,11 +7,11 @@ Maintained fork of Pawn Editor for RimWorld 1.6.
 This fork keeps Pawn Editor usable in large modlists and ongoing colonies.
 It focuses on stability fixes, compatibility, and predictable in-game behavior.
 
-## Latest change (v2.0.1)
+## Latest change (v2.0.2)
 
-- In-game `Edit` gizmo now appears only when both conditions are true:
-  - Dev Mode enabled
-  - God Mode enabled
+- In-game top-right Pawn Editor button now appears only with Dev Mode + God Mode.
+- In-game `Edit` gizmo appears only with Dev Mode + God Mode.
+- Social tab defaults to showing all relations on first open.
 
 This avoids exposing the edit gizmo during normal gameplay while keeping quick access for debug/admin workflows.
 

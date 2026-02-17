@@ -117,6 +117,7 @@ public class PawnEditorMod : Mod
     {
         if (!Settings.InGameDevButton) return;
         if (!Prefs.DevMode) return;
+        if (!DebugSettings.godMode) return;
 
         // Botón en esquina superior derecha (ajusta si quieres)
         var size = 24f;
