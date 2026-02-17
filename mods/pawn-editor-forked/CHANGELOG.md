@@ -4,6 +4,13 @@
 
 All fixes below are applied to the community fork.
 
+### Social compatibility identity fix
+
+- Cloned pawns now keep a stable social compatibility seed from their original saved ThingID.
+- New clones still receive a unique new ThingID (no duplicate entity IDs).
+- `Pawn_RelationsTracker.CompatibilityWith()` is patched to use the saved compatibility seed offset instead of the remapped clone ThingID offset.
+- Method detail: replace pair offset source from `ConstantPerPawnsPairCompatibilityOffset(otherPawn.thingIDNumber)` to `ConstantPerPawnsPairCompatibilityOffset(CompatibilitySeedFor(otherPawn))` when seed exists.
+
 ### Critical fixes
 
 - **#001 IntField reset** (`UIUtility.cs`): `intBuff` initializes from current value and control naming is stable.
