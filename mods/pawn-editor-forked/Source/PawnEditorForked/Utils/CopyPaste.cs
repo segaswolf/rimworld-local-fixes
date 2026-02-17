@@ -1,4 +1,6 @@
-﻿using Verse;
+﻿using System.Linq;
+using RimWorld;
+using Verse;
 
 namespace PawnEditor;
 
@@ -35,7 +37,9 @@ public static partial class PawnEditor
         if (into.inventory != null && clipboard?.inventory != null)
         {
             into.inventory.DestroyAll();
-            foreach (var thing in clipboard.inventory.innerContainer) into.inventory.innerContainer.TryAdd(thing.Clone(), false);
+            // FIX #008: Snapshot list to avoid collection-modified errors.
+            var items = clipboard.inventory.innerContainer.ToList();
+            foreach (var thing in items) into.inventory.innerContainer.TryAdd(thing.Clone(), false);
         }
     }
 
@@ -43,6 +47,16 @@ public static partial class PawnEditor
     {
         var clone = (T)ThingMaker.MakeThing(thing.def, thing.Stuff);
         clone.HitPoints = thing.HitPoints;
+
+        // FIX #008: Copy stackCount, quality, and color.
+        clone.stackCount = thing.stackCount;
+
+        if (thing.TryGetComp<CompQuality>() is { } srcQ && clone.TryGetComp<CompQuality>() is { } dstQ)
+            dstQ.SetQuality(srcQ.Quality, ArtGenerationContext.Outsider);
+
+        if (thing.TryGetComp<CompColorable>() is { Active: true } srcC && clone.TryGetComp<CompColorable>() is { } dstC)
+            dstC.SetColor(srcC.Color);
+
         if (thing is ThingWithComps twc)
             foreach (var comp in twc.AllComps)
                 comp.PostSplitOff(clone);

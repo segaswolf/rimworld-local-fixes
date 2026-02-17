@@ -149,7 +149,15 @@ public partial class TabWorker_Bio_Humanlike
         if (Widgets.ButtonText(colorRect, "PawnEditor.PickColor".Translate()))
         {
             var currentColor = pawn.story.favoriteColor?.color ?? Color.white;
-            Find.WindowStack.Add(new Dialog_ColorPicker(color => pawn.story.favoriteColor.color = color, DefDatabase<ColorDef>.AllDefs
+            // FIX #002: Don't mutate the shared ColorDef — find the nearest match instead.
+            Find.WindowStack.Add(new Dialog_ColorPicker(color =>
+            {
+                var best = DefDatabase<ColorDef>.AllDefsListForReading
+                    .Where(cd => cd != null)
+                    .OrderBy(cd => { float dr = cd.color.r - color.r, dg = cd.color.g - color.g, db = cd.color.b - color.b; return dr*dr + dg*dg + db*db; })
+                    .FirstOrDefault();
+                if (best != null) pawn.story.favoriteColor = best;
+            }, DefDatabase<ColorDef>.AllDefs
                    .Select(cd => cd.color)
                    .ToList(),
                 currentColor));

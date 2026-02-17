@@ -77,9 +77,16 @@ public class ListingMenu_Hediffs : ListingMenu<HediffDef>
             if (defaultPart.Item2?.Select(group => pawn.RaceProps.body.AllParts.FirstOrDefault(part => part.IsInGroup(group))).FirstOrDefault() is { } part2)
                 part = part2;
         }
-        if (part == null && (typeof(Hediff_Injury).IsAssignableFrom(hediffDef.hediffClass) || typeof(
-                Hediff_MissingPart).IsAssignableFrom(hediffDef.hediffClass)))
+        // FIX #004: Only injuries can safely default to corePart. MissingPart on corePart = death.
+        if (part == null && typeof(Hediff_Injury).IsAssignableFrom(hediffDef.hediffClass))
             part = pawn.RaceProps.body.corePart;
+
+        if (part == null && typeof(Hediff_MissingPart).IsAssignableFrom(hediffDef.hediffClass))
+        {
+            part = pawn.RaceProps.body.AllParts.FirstOrDefault(p => p != pawn.RaceProps.body.corePart);
+            if (part == null)
+                return new FailureInfo("PawnEditor.SelectBodyPart".Translate());
+        }
 
         AddResult result = new SuccessInfo(() =>
         {

@@ -165,6 +165,17 @@ public partial class TabWorker_Bio_Humanlike
             pawn.apparel?.DropAllOrMoveAllToInventory(apparel => !apparel.def.apparel.developmentalStageFilter.Has(stage));
             var bodyTypeFor = PawnGenerator.GetBodyTypeFor(pawn);
             pawn.story.bodyType = bodyTypeFor;
+
+            // FIX #007: Generate adulthood backstory when transitioning child→adult.
+            if (stage == DevelopmentalStage.Adult && pawn.story.Adulthood == null)
+            {
+                var valid = DefDatabase<BackstoryDef>.AllDefsListForReading
+                    .Where(bs => bs.slot == BackstorySlot.Adulthood).ToList();
+                if (valid.Any()) pawn.story.Adulthood = valid.RandomElement();
+            }
+            else if (stage == DevelopmentalStage.Child)
+                pawn.story.Adulthood = null;
+
             RecacheGraphics(pawn);
         }
     }
@@ -192,25 +203,29 @@ public partial class TabWorker_Bio_Humanlike
         });
     }
 
+    // FIX #010: Null checks + snapshot gene lists to prevent NRE and collection-modified errors.
     private static void ClearXenotype(Pawn pawn)
     {
+        if (pawn.genes == null) return;
+
         if (pawn.genes.xenotype != null)
-            foreach (var xenotypeGene in pawn.genes.xenotype.genes)
+            foreach (var xenotypeGene in pawn.genes.xenotype.genes.ToList())
             {
-                var gene = (pawn.genes.xenotype.inheritable ? pawn.genes.Endogenes : pawn.genes.Xenogenes).FirstOrDefault(g => g.def == xenotypeGene);
-                pawn.genes.RemoveGene(gene);
+                var gene = (pawn.genes.xenotype.inheritable ? pawn.genes.Endogenes : pawn.genes.Xenogenes)?.FirstOrDefault(g => g.def == xenotypeGene);
+                if (gene != null) pawn.genes.RemoveGene(gene);
             }
 
         if (pawn.genes.CustomXenotype is { } customXenotype)
-            foreach (var xenotypeGene in customXenotype.genes)
+            foreach (var xenotypeGene in customXenotype.genes.ToList())
             {
-                var gene = (customXenotype.inheritable ? pawn.genes.Endogenes : pawn.genes.Xenogenes).FirstOrDefault(g => g.def == xenotypeGene);
-                pawn.genes.RemoveGene(gene);
+                var gene = (customXenotype.inheritable ? pawn.genes.Endogenes : pawn.genes.Xenogenes)?.FirstOrDefault(g => g.def == xenotypeGene);
+                if (gene != null) pawn.genes.RemoveGene(gene);
             }
     }
 
     public static void SetXenotype(Pawn pawn, XenotypeDef xenotype)
     {
+        if (pawn.genes == null) return;
         ClearXenotype(pawn);
         foreach (var gene in xenotype.genes)
             pawn.genes.AddGene(gene, !xenotype.inheritable);
@@ -220,6 +235,7 @@ public partial class TabWorker_Bio_Humanlike
 
     public static void SetXenotype(Pawn pawn, CustomXenotype xenotype)
     {
+        if (pawn.genes == null || xenotype == null) return;
         ClearXenotype(pawn);
         pawn.genes.xenotypeName = xenotype.name;
         pawn.genes.iconDef = xenotype.IconDef;

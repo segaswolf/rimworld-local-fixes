@@ -298,6 +298,18 @@ public static partial class PawnEditor
                 else
                 {
                     StartingThingsManager.AddPawn(category, addedPawn);
+
+                    // FIX #018: Auto-assign Overseer so mechs don't spawn rogue.
+                    if (category == PawnCategory.Mechs && addedPawn.GetOverseer() == null)
+                    {
+                        var mechanitor = Find.GameInitData.startingAndOptionalPawns
+                            .FirstOrDefault(p => p.RaceProps.Humanlike && MechanitorUtility.IsMechanitor(p));
+                        if (mechanitor != null)
+                            addedPawn.relations.AddDirectRelation(PawnRelationDefOf.Overseer, mechanitor);
+                        else
+                            Messages.Message("PawnEditor.MechNoOverseer".Translate(addedPawn.LabelCap),
+                                MessageTypeDefOf.CautionInput, false);
+                    }
                 }
             else
                 addedPawn.teleporting = true;

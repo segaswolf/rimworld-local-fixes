@@ -28,45 +28,54 @@ public static class StartingThingsManager
         startingThingsFar.Clear();
         removedParts.Clear();
 
-        foreach (var part in Find.Scenario.AllParts)
-            switch (part)
-            {
-                case ScenPart_StartingAnimal:
-                    startingAnimals.AddRange(part.PlayerStartingThings().OfType<Pawn>());
-                    Find.Scenario.RemovePart(part);
-                    removedParts.Add(part);
-                    break;
-                case ScenPart_StartingMech:
-
-                    startingMechs.AddRange(part.PlayerStartingThings().OfType<Pawn>());
-                    Find.Scenario.RemovePart(part);
-                    removedParts.Add(part);
-                    break;
-                case ScenPart_StartingThing_Defined:
-                    
-                    startingThings.AddRange(part.PlayerStartingThings());
-                    Find.Scenario.RemovePart(part);
-                    removedParts.Add(part);
-                    break;
-                case ScenPart_ScatterThingsNearPlayerStart near:
-                    {
-                        var thing = ThingMaker.MakeThing(near.thingDef, near.stuff);
-                        thing.stackCount = near.count;
-                        startingThingsNear.Add(thing);
+        // FIX #009: Snapshot parts before iterating — RemovePart() inside foreach corrupts the enumerator.
+        var partsSnapshot = Find.Scenario.AllParts.ToList();
+        try
+        {
+            foreach (var part in partsSnapshot)
+                switch (part)
+                {
+                    case ScenPart_StartingAnimal:
+                        startingAnimals.AddRange(part.PlayerStartingThings().OfType<Pawn>());
                         Find.Scenario.RemovePart(part);
                         removedParts.Add(part);
                         break;
-                    }
-                case ScenPart_ScatterThingsAnywhere far:
-                    {
-                        var thing = ThingMaker.MakeThing(far.thingDef, far.stuff);
-                        thing.stackCount = far.count;
-                        startingThingsFar.Add(thing);
+                    case ScenPart_StartingMech:
+                        startingMechs.AddRange(part.PlayerStartingThings().OfType<Pawn>());
                         Find.Scenario.RemovePart(part);
                         removedParts.Add(part);
                         break;
-                    }
-            }
+                    case ScenPart_StartingThing_Defined:
+                        startingThings.AddRange(part.PlayerStartingThings());
+                        Find.Scenario.RemovePart(part);
+                        removedParts.Add(part);
+                        break;
+                    case ScenPart_ScatterThingsNearPlayerStart near:
+                        {
+                            var thing = ThingMaker.MakeThing(near.thingDef, near.stuff);
+                            thing.stackCount = near.count;
+                            startingThingsNear.Add(thing);
+                            Find.Scenario.RemovePart(part);
+                            removedParts.Add(part);
+                            break;
+                        }
+                    case ScenPart_ScatterThingsAnywhere far:
+                        {
+                            var thing = ThingMaker.MakeThing(far.thingDef, far.stuff);
+                            thing.stackCount = far.count;
+                            startingThingsFar.Add(thing);
+                            Find.Scenario.RemovePart(part);
+                            removedParts.Add(part);
+                            break;
+                        }
+                }
+        }
+        catch (System.Exception ex)
+        {
+            Log.Error($"[PawnEditor] ProcessScenario failed, restoring: {ex.Message}");
+            RestoreScenario();
+            return;
+        }
 
         Find.Scenario.parts.Add(new ScenPart_StartingThingsFromPawnEditor()
         {

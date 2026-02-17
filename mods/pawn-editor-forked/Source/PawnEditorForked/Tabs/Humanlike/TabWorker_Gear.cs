@@ -259,11 +259,24 @@ public class TabWorker_Gear : TabWorker<Pawn>
         inRect.xMin += 4f;
     }
 
+    // FIX #012: OnLoad callbacks refresh graphics so weapons/apparel aren't invisible after loading.
     public override IEnumerable<SaveLoadItem> GetSaveLoadItems(Pawn pawn)
     {
-        yield return new SaveLoadItem<Pawn_ApparelTracker>("Apparel".Translate(), pawn.apparel);
-        yield return new SaveLoadItem<Pawn_EquipmentTracker>("Equipment".Translate(), pawn.equipment);
-        yield return new SaveLoadItem<Pawn_InventoryTracker>("Possessions".Translate(), pawn.inventory);
+        yield return new SaveLoadItem<Pawn_ApparelTracker>("Apparel".Translate(), pawn.apparel, new()
+        {
+            ParentPawn = pawn,
+            OnLoad = _ => { TabWorker_Bio_Humanlike.RecacheGraphics(pawn); ClearCaches(); }
+        });
+        yield return new SaveLoadItem<Pawn_EquipmentTracker>("Equipment".Translate(), pawn.equipment, new()
+        {
+            ParentPawn = pawn,
+            OnLoad = _ => { TabWorker_Bio_Humanlike.RecacheGraphics(pawn); ClearCaches(); }
+        });
+        yield return new SaveLoadItem<Pawn_InventoryTracker>("Possessions".Translate(), pawn.inventory, new()
+        {
+            ParentPawn = pawn,
+            OnLoad = _ => ClearCaches()
+        });
     }
 
     public override IEnumerable<FloatMenuOption> GetRandomizationOptions(Pawn pawn)

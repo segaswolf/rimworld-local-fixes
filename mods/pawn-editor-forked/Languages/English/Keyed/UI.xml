@@ -252,4 +252,8 @@
     <PawnEditor.ItemType.Apparel>Apparel</PawnEditor.ItemType.Apparel>
     <PawnEditor.ItemType.Equipment>Equipment</PawnEditor.ItemType.Equipment>
     <PawnEditor.ItemType.Possessions>Possessions</PawnEditor.ItemType.Possessions>
+
+    <!-- Fork fixes -->
+    <PawnEditor.SelectBodyPart>Select a specific body part first.</PawnEditor.SelectBodyPart>
+    <PawnEditor.MechNoOverseer>{0} has no overseer — assign a Mechanitor colonist or the mech will go rogue.</PawnEditor.MechNoOverseer>
 </LanguageData>
