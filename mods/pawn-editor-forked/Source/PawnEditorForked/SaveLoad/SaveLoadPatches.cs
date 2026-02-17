@@ -45,11 +45,18 @@ public static partial class SaveLoadUtility
 
     public static bool ReassignLoadID(ref int value, string label)
     {
+        if (!currentlyWorking) return true;
+
         var isLoadId = label.Equals("loadID", StringComparison.OrdinalIgnoreCase);
         var isThingIdLabel = label.Equals("id", StringComparison.OrdinalIgnoreCase) || label.Equals("thingIDNumber", StringComparison.OrdinalIgnoreCase);
 
         if ((isLoadId || isThingIdLabel) && Scribe.mode == LoadSaveMode.PostLoadInit)
         {
+            // Preserve identity when loading over an existing pawn, but still remap for newly
+            // created pawns loaded from file (to avoid duplicate Thing IDs).
+            if (isThingIdLabel && Scribe.loader.curParent is Pawn && !remapPawnThingIds)
+                return true;
+
             // Fork fix: RimWorld Thing IDs are typically saved under label "id" (Thing.thingIDNumber).
             // Only remap those when the current parent is a Thing to avoid touching unrelated int fields.
             if (isThingIdLabel && Scribe.loader.curParent is not Thing)
