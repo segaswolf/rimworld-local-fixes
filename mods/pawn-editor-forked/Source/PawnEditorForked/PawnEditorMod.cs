@@ -211,8 +211,11 @@ public class PawnEditorMod : Mod
         return codes;
     }
 
-    public static IEnumerable<Gizmo> AddEditButton(IEnumerable<Gizmo> gizmos, Pawn __instance) =>
-        gizmos.Append(new Command_Action
+    public static IEnumerable<Gizmo> AddEditButton(IEnumerable<Gizmo> gizmos, Pawn __instance)
+    {
+        if (!Prefs.DevMode || !DebugSettings.godMode) return gizmos;
+
+        return gizmos.Append(new Command_Action
         {
             defaultLabel = "PawnEditor.Edit".Translate(),
             defaultDesc = "PawnEditor.Edit.Desc".Translate(),
@@ -222,6 +225,7 @@ public class PawnEditorMod : Mod
                 PawnEditor.Select(__instance);
             }
         });
+    }
 
 
     public static void Notify_ConfigurePawns()
