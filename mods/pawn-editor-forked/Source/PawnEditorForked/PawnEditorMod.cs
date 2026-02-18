@@ -33,23 +33,23 @@ public class PawnEditorMod : Mod
         LongEventHandler.ExecuteWhenFinished(delegate
         {
             foreach (var assembly in content.assemblies.loadedAssemblies)
-            foreach (var type in assembly.GetTypes())
-                if (type.TryGetAttribute<ModCompatAttribute>(out var modCompat) && modCompat.ShouldActivate())
-                {
-                    var method = AccessTools.Method(type, "Activate", Type.EmptyTypes);
-                    method?.Invoke(null, Array.Empty<object>());
-                    method = AccessTools.Method(type, "Activate", new[] { typeof(Harmony) });
-                    method?.Invoke(null, new object[] { Harm });
-                    var field = AccessTools.Field(type, "Active");
-                    field?.SetValue(null, true);
-                    method = AccessTools.Method(type, "GetName");
-                    var name = (string)method?.Invoke(null, Array.Empty<object>());
-                    method = AccessTools.Method(type, "get_Name");
-                    name ??= (string)method?.Invoke(null, Array.Empty<object>());
-                    field = AccessTools.Field(type, "Name");
-                    name ??= (string)field?.GetValue(null);
-                    if (name != null) Log.Message($"[Pawn Editor] {name} compatibility active.");
-                }
+                foreach (var type in assembly.GetTypes())
+                    if (type.TryGetAttribute<ModCompatAttribute>(out var modCompat) && modCompat.ShouldActivate())
+                    {
+                        var method = AccessTools.Method(type, "Activate", Type.EmptyTypes);
+                        method?.Invoke(null, Array.Empty<object>());
+                        method = AccessTools.Method(type, "Activate", new[] { typeof(Harmony) });
+                        method?.Invoke(null, new object[] { Harm });
+                        var field = AccessTools.Field(type, "Active");
+                        field?.SetValue(null, true);
+                        method = AccessTools.Method(type, "GetName");
+                        var name = (string)method?.Invoke(null, Array.Empty<object>());
+                        method = AccessTools.Method(type, "get_Name");
+                        name ??= (string)method?.Invoke(null, Array.Empty<object>());
+                        field = AccessTools.Field(type, "Name");
+                        name ??= (string)field?.GetValue(null);
+                        if (name != null) Log.Message($"[Pawn Editor] {name} compatibility active.");
+                    }
 
             Settings = GetSettings<PawnEditorSettings>();
             ApplySettings();
@@ -113,16 +113,15 @@ public class PawnEditorMod : Mod
         base.WriteSettings();
         ApplySettings();
     }
-    public static void AddDevButtonPostfix()
+    public static void AddDevButtonPostfix(DebugWindowsOpener __instance)
     {
-        if (!Settings.InGameDevButton) return;
-        if (!Prefs.DevMode) return;
+        // FIX #016: The old version drew a standalone button at a fixed screen position,
+        // completely disconnected from the debug toolbar. This version appends to the
+        // WidgetRow used by DrawButtons, placing the icon inline next to God Mode etc.
+        // Harmony auto-injects __instance because it matches the patched method's type.
+        if (__instance.widgetRow == null) return;
 
-        // Botón en esquina superior derecha (ajusta si quieres)
-        var size = 24f;
-        var rect = new Rect(UI.screenWidth - size - 10f, 10f, size, size);
-
-        if (Widgets.ButtonImage(rect, TexPawnEditor.OpenPawnEditor))
+        if (__instance.widgetRow.ButtonIcon(TexPawnEditor.OpenPawnEditor, "PawnEditor.CharacterEditor".Translate()))
             Find.WindowStack.Add(new Dialog_PawnEditor_InGame());
     }
 
